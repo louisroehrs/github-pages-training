@@ -1,5 +1,4 @@
-
-*.pptx.bak
+.DS_Store
+*.key
 *~
-add_fork_pr_slides.py
 
