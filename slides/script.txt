@@ -1,0 +1,30 @@
+Get Live with GitHub
+
+Have a website, portfolio, project, startup landing page, or personal page sitting on your computer? Learn how to publish it online for free using GitHub Pages.
+
+In this hands-on workshop, we'll walk through the entire process of taking a website from your local machine to a live public URL. Whether you're a student, developer, designer, founder, or complete beginner, you'll leave with a website accessible on the internet.
+
+What You'll Learn:
+Creating a GitHub account
+Understanding repositories and basic Git workflows
+Uploading your website files to GitHub
+Publishing with GitHub Pages
+Connecting a custom domain (optional)
+Best practices for portfolios, project pages, and startup landing pages
+
+Who Should Attend:
+Students building portfolios
+Hackathon participants
+Startup founders
+Developers and designers
+Anyone who wants a free website
+
+Requirements:
+Bring a laptop
+Create a GitHub account beforehand (optional but recommended)
+Have website files ready, or follow along with our sample project
+
+Outcome:
+By the end of the workshop, every participant will have a live website hosted for free on GitHub Pages and understand how to update and maintain it going forward.
+
+Skill Level: Beginner-Friendly 

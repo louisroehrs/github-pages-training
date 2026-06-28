@@ -1,8 +1,571 @@
-Welcome to github training.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Deploy Your First Website to GitHub Pages</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --bg-soft: #161b22;
+    --bg-card: #1c2128;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #9da7b3;
+    --teal: #2dd4bf;
+    --teal-deep: #0f766e;
+    --code-bg: #0a0e14;
+    --warn: #f79646;
+  }
 
-Claude skill at <a href="https://raw.githubusercontent.com/louisroehrs/github-pages-training/refs/heads/main/deploy-github-pages.md">Deploy github pages claude skill</a>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-<a href="GitHub-Pages-Training.pptx">Powerpoint Training</a><BR><BR>
+  html { scroll-behavior: smooth; }
 
-<a href="GitHub-Pages-Training.key">Keynote Training</a><BR><BR>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
 
+  code, pre {
+    font-family: "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  }
+
+  a { color: var(--teal); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ---- Hero ---- */
+  .hero {
+    min-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 6rem 1.5rem 4rem;
+    position: relative;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(45, 212, 191, 0.12), transparent 45%),
+      radial-gradient(circle at 85% 70%, rgba(15, 118, 110, 0.18), transparent 50%),
+      var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    font-size: 0.78rem;
+    color: var(--teal);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.4rem, 6vw, 4.5rem);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    max-width: 14ch;
+    background: linear-gradient(120deg, #ffffff 30%, var(--teal) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero .sub {
+    margin-top: 1.5rem;
+    font-size: clamp(1rem, 2.2vw, 1.3rem);
+    color: var(--muted);
+    max-width: 50ch;
+  }
+
+  .byline {
+    margin-top: 2.5rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .byline strong { color: var(--text); }
+
+  .cta-row {
+    margin-top: 2.5rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .btn {
+    display: inline-block;
+    padding: 0.85rem 1.6rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.98rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn:hover { transform: translateY(-2px); text-decoration: none; }
+  .btn-primary {
+    background: linear-gradient(120deg, var(--teal) 0%, var(--teal-deep) 100%);
+    color: #04201d;
+    box-shadow: 0 8px 24px rgba(45, 212, 191, 0.25);
+  }
+  .btn-ghost {
+    border: 1px solid var(--border);
+    color: var(--text);
+    background: var(--bg-soft);
+  }
+
+  /* ---- Layout ---- */
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+
+  .part {
+    padding: 5rem 0 1rem;
+  }
+  .part-header { text-align: center; margin-bottom: 3rem; }
+  .part-tag {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--teal);
+    border: 1px solid rgba(45, 212, 191, 0.35);
+    border-radius: 999px;
+    padding: 0.35rem 1rem;
+    margin-bottom: 1.2rem;
+  }
+  .part-header h2 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .part-header p {
+    margin-top: 0.75rem;
+    color: var(--muted);
+    font-size: 1.1rem;
+  }
+
+  /* ---- Cards / steps ---- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.8rem;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+  .card:hover { border-color: var(--teal-deep); transform: translateY(-3px); }
+
+  .card .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem; height: 2.2rem;
+    border-radius: 8px;
+    background: rgba(45, 212, 191, 0.12);
+    color: var(--teal);
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .card h3 { font-size: 1.2rem; margin-bottom: 0.6rem; }
+  .card p { color: var(--muted); font-size: 0.97rem; }
+  .card ul { color: var(--muted); font-size: 0.95rem; margin: 0.5rem 0 0 1.1rem; }
+  .card ul li { margin-bottom: 0.35rem; }
+
+  /* ---- Code blocks ---- */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.3rem 1.4rem;
+    overflow-x: auto;
+    margin: 1.2rem 0;
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+  pre code { color: #c9d1d9; }
+  .c-comment { color: #6b7785; }
+  .c-cmd { color: var(--teal); }
+  .c-str { color: #a5d6a7; }
+
+  .codeblock-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    margin-top: 1.5rem;
+  }
+
+  .callout {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    background: rgba(247, 150, 70, 0.08);
+    border: 1px solid rgba(247, 150, 70, 0.3);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+    color: #f0d9c4;
+  }
+  .callout.tip {
+    background: rgba(45, 212, 191, 0.07);
+    border-color: rgba(45, 212, 191, 0.3);
+    color: #cdeee9;
+  }
+  .callout .ico { font-size: 1.2rem; line-height: 1.4; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  @media (max-width: 760px) { .two-col { grid-template-columns: 1fr; } }
+
+  .divider { height: 1px; background: var(--border); margin: 4rem 0 0; }
+
+  /* ---- Final / footer ---- */
+  .finale {
+    text-align: center;
+    padding: 5rem 1.5rem;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(45, 212, 191, 0.12), transparent 55%),
+      var(--bg-soft);
+    border-top: 1px solid var(--border);
+    margin-top: 4rem;
+  }
+  .finale h2 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; }
+  .finale .pills { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+  .pill {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.6rem 1.3rem;
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+  .pill strong { color: var(--teal); }
+
+  footer {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .lead {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 70ch;
+    margin: 0 auto 2rem;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="eyebrow">Training Session</div>
+    <h1>Deploy Your First Website to GitHub Pages</h1>
+    <p class="sub">Manual deployment&nbsp;→&nbsp;automated with a Claude&nbsp;Code skill&nbsp;→&nbsp;contributing back with forks &amp; pull requests.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://docs.google.com/presentation/d/1FCLiTZNt-pBCXihv1uLO_rc0oG43FXrI1fJiKfINsGE/edit?usp=sharing">View the Slides</a>
+      <a class="btn btn-ghost" href="https://raw.githubusercontent.com/louisroehrs/github-pages-training/refs/heads/main/deploy-github-pages.md">Get the Claude Skill</a>
+    </div>
+    <p class="byline"><strong>Louis Roehrs</strong> &nbsp;·&nbsp; TeleTrex &nbsp;·&nbsp; Mountain View, CA &nbsp;·&nbsp; <a href="https://teletrex.com">teletrex.com</a></p>
+  </header>
+
+  <main>
+    <!-- WHAT WE'LL COVER -->
+    <section class="part wrap">
+      <div class="part-header">
+        <span class="part-tag">Agenda</span>
+        <h2>What we'll cover today</h2>
+        <p>Prerequisites: a GitHub account, Git installed, and a text editor.</p>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <span class="step-num">1</span>
+          <h3>Manual deployment</h3>
+          <p>Create a repo, push your code, and enable GitHub Pages — step by step, from zero to a live website.</p>
+        </div>
+        <div class="card">
+          <span class="step-num">2</span>
+          <h3>Automate it</h3>
+          <p>Build a <code>/deploy-github-pages</code> Claude Code skill that does all of Part 1 in a single command.</p>
+        </div>
+        <div class="card">
+          <span class="step-num">3</span>
+          <h3>Work together</h3>
+          <p>Fork a repo, make a change on a branch, and open a Pull Request to contribute lasting changes.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PART 1 -->
+    <section class="part wrap" id="part1">
+      <div class="part-header">
+        <span class="part-tag">Part 1</span>
+        <h2>The Manual Way</h2>
+        <p>Six steps from zero to a live website.</p>
+      </div>
+
+      <p class="lead">
+        <strong>GitHub Pages</strong> is free static website hosting. It serves HTML, CSS, JS and images
+        straight from a repository with instant HTTPS, supports custom domains, and redeploys automatically
+        on every push. Your URL will look like
+        <code>https://username.github.io/repo-name</code>.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <span class="step-num">1</span>
+          <h3>Create your HTML file</h3>
+          <p>Add a file named <code>index.html</code> — GitHub Pages serves this as your homepage.</p>
+        </div>
+        <div class="card">
+          <span class="step-num">2</span>
+          <h3>Init a local Git repo</h3>
+          <p><code>git init</code> creates a hidden <code>.git</code> folder, <code>git add .</code> stages files, and <code>git commit</code> saves a snapshot.</p>
+        </div>
+        <div class="card">
+          <span class="step-num">3</span>
+          <h3>Create a GitHub repo</h3>
+          <p>Use the github.com UI, or one command with the <code>gh</code> CLI.</p>
+        </div>
+        <div class="card">
+          <span class="step-num">4</span>
+          <h3>Push your code</h3>
+          <p>Connect your local repo to GitHub as <code>origin</code> and push to <code>main</code>.</p>
+        </div>
+        <div class="card">
+          <span class="step-num">5</span>
+          <h3>Enable GitHub Pages</h3>
+          <p>In <em>Settings → Pages</em>, deploy from branch <code>main</code> / root — or enable it via <code>gh api</code>.</p>
+        </div>
+        <div class="card">
+          <span class="step-num">6</span>
+          <h3>Your site is live 🎉</h3>
+          <p>First deploy takes ~60s. Watch the <strong>Actions</strong> tab; every push auto-redeploys.</p>
+        </div>
+      </div>
+
+      <div class="callout">
+        <span class="ico">⚠️</span>
+        <div>The file must be named exactly <code>index.html</code> (all lowercase). <code>Index.html</code>, <code>home.html</code>, or <code>index.htm</code> won't be served automatically.</div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="codeblock-label">Initialize &amp; commit</div>
+<pre><code><span class="c-comment"># Navigate to your project folder</span>
+<span class="c-cmd">cd</span> ~/projects/my-site
+<span class="c-comment"># Initialise a new git repository</span>
+<span class="c-cmd">git init</span>
+<span class="c-cmd">git add</span> .
+<span class="c-cmd">git commit</span> -m <span class="c-str">"Initial commit"</span></code></pre>
+        </div>
+        <div>
+          <div class="codeblock-label">Create &amp; push (gh CLI)</div>
+<pre><code><span class="c-cmd">gh auth login</span>
+<span class="c-comment"># One command creates the repo + pushes</span>
+<span class="c-cmd">gh repo create</span> my-site \
+  --public --source=. \
+  --remote=origin --push</code></pre>
+        </div>
+      </div>
+
+      <div class="codeblock-label">Push manually &amp; enable Pages</div>
+<pre><code><span class="c-cmd">git remote add</span> origin https://github.com/YOU/my-site.git
+<span class="c-cmd">git branch</span> -M main
+<span class="c-cmd">git push</span> -u origin main
+
+<span class="c-comment"># Enable Pages via the API</span>
+<span class="c-cmd">gh api</span> -X POST /repos/YOU/my-site/pages \
+  -f source[branch]=main -f source[path]=/</code></pre>
+
+      <div class="codeblock-label">The development cycle</div>
+<pre><code><span class="c-comment"># edit, preview in browser, repeat...</span>
+<span class="c-cmd">git status</span>              <span class="c-comment"># what changed</span>
+<span class="c-cmd">git diff</span>                <span class="c-comment"># exactly what changed</span>
+<span class="c-cmd">git add</span> --all
+<span class="c-cmd">git commit</span> -m <span class="c-str">"Added a pretty icon to the home page"</span>
+<span class="c-cmd">git push</span>                <span class="c-comment"># publish to your live site</span></code></pre>
+
+      <div class="callout tip">
+        <span class="ico">🔧</span>
+        <div><strong>Common gotchas:</strong> wrong filename · private repo needs GitHub Pro/Team · first deploy takes ~60s · 404s usually mean the wrong branch/folder in Settings → Pages · auth errors? run <code>gh auth login</code>.</div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- PART 2 -->
+    <section class="part wrap" id="part2">
+      <div class="part-header">
+        <span class="part-tag">Part 2</span>
+        <h2>Automate It with a Claude Code Skill</h2>
+        <p>One command. All six steps. Done.</p>
+      </div>
+
+      <p class="lead">
+        A Claude Code skill is a custom <code>/slash-command</code> you define as a Markdown file in
+        <code>~/.claude/commands/</code> (user-wide) or <code>.claude/commands/</code> (per-project).
+        When invoked, Claude reads the file and follows its instructions — running shell commands,
+        editing files, and calling APIs. No plugin system, no build step.
+      </p>
+
+      <div class="two-col">
+        <div>
+          <div class="codeblock-label">Install the skill</div>
+<pre><code><span class="c-cmd">mkdir</span> -p ~/.claude/commands
+<span class="c-cmd">curl</span> -O https://raw.githubusercontent.com/\
+louisroehrs/github-pages-training/refs/\
+heads/main/deploy-github-pages.md
+<span class="c-cmd">cp</span> deploy-github-pages.md ~/.claude/commands/</code></pre>
+        </div>
+        <div>
+          <div class="codeblock-label">Use it from any project</div>
+<pre><code><span class="c-comment"># In Claude Code, just type:</span>
+/deploy-github-pages my-landing-page</code></pre>
+          <p style="color:var(--muted);font-size:0.95rem;">Claude checks prerequisites, creates the repo, pushes your code, enables Pages, and returns your live URL — all without leaving your editor.</p>
+        </div>
+      </div>
+
+      <div class="codeblock-label">deploy-github-pages.md — the skill file</div>
+<pre><code><span class="c-comment">---
+description: Deploy the current project to GitHub Pages
+---</span>
+Deploy this project to GitHub Pages.
+Repo name (optional): $ARGUMENTS
+
+1. Verify git is installed. If not, tell the user and stop.
+2. Verify gh is installed and authenticated (gh auth status).
+3. If no .git folder: git init, git add ., git commit.
+4. If no remote 'origin': gh repo create $ARGUMENTS --public
+   --source=. --remote=origin --push, then skip step 5.
+5. Otherwise: git push -u origin main
+6. Enable Pages: gh api -X POST /repos/{owner}/{repo}/pages
+   -f source[branch]=main -f source[path]=/ (ignore 409).
+7. Poll gh api /repos/{owner}/{repo}/pages --jq .html_url
+   until it returns a URL. Print: 'Live at &lt;url&gt;'</code></pre>
+
+      <div class="grid">
+        <div class="card"><span class="step-num">1</span><h3>Check prerequisites</h3><p>Verifies git and gh are installed and gh is authenticated.</p></div>
+        <div class="card"><span class="step-num">2</span><h3>Git init if needed</h3><p>Runs init, add, commit if no repo exists yet.</p></div>
+        <div class="card"><span class="step-num">3</span><h3>Create GitHub repo</h3><p><code>gh repo create</code> — public, sets the origin remote.</p></div>
+        <div class="card"><span class="step-num">4</span><h3>Push code</h3><p><code>git push -u origin main</code>.</p></div>
+        <div class="card"><span class="step-num">5</span><h3>Enable Pages</h3><p>API call via <code>gh api</code> to activate Pages on main / root.</p></div>
+        <div class="card"><span class="step-num">6</span><h3>Return live URL</h3><p>Polls until the site is live, then prints the URL.</p></div>
+      </div>
+
+      <div class="callout tip">
+        <span class="ico">⚡</span>
+        <div><strong>Manual:</strong> 6 steps, ~5 minutes. &nbsp;<strong>Automated:</strong> <code>/deploy-github-pages</code>, ~30 seconds — works in any project.</div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- PART 3 -->
+    <section class="part wrap" id="part3">
+      <div class="part-header">
+        <span class="part-tag">Part 3</span>
+        <h2>Fork, Edit &amp; Pull Request</h2>
+        <p>Contribute lasting changes to any project — the right way.</p>
+      </div>
+
+      <p class="lead">
+        A <strong>fork</strong> is your personal copy of someone else's repository, living under your GitHub
+        account with full write access. The original is called the <strong>upstream</strong>. Your changes
+        don't affect upstream until a <strong>Pull Request</strong> is reviewed and merged.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <span class="step-num">1</span>
+          <h3>Fork the repository</h3>
+          <p>Click <strong>Fork</strong> in the top-right on GitHub. Your fork is fully independent — pushes go to your copy only.</p>
+        </div>
+        <div class="card">
+          <span class="step-num">2</span>
+          <h3>Clone your fork</h3>
+          <p>Clone <em>your</em> fork (not the original), then add the original as <code>upstream</code> to pull future updates.</p>
+        </div>
+        <div class="card">
+          <span class="step-num">3</span>
+          <h3>Branch, change, commit</h3>
+          <p>Work on a dedicated branch — never commit directly to <code>main</code>.</p>
+        </div>
+        <div class="card">
+          <span class="step-num">4</span>
+          <h3>Push &amp; open a PR</h3>
+          <p>Push the branch to your fork, then open a Pull Request against upstream.</p>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="codeblock-label">Clone &amp; track upstream</div>
+<pre><code><span class="c-cmd">git clone</span> https://github.com/YOU/hackerdojo.org
+<span class="c-cmd">cd</span> hackerdojo.org
+<span class="c-cmd">git remote add</span> upstream \
+  https://github.com/hd-admin/hackerdojo.org
+<span class="c-cmd">git remote</span> -v</code></pre>
+        </div>
+        <div>
+          <div class="codeblock-label">Branch &amp; commit</div>
+<pre><code><span class="c-cmd">git checkout</span> -b fix/update-homepage-text
+<span class="c-comment"># edit index.html ...</span>
+<span class="c-cmd">git add</span> index.html
+<span class="c-cmd">git commit</span> -m <span class="c-str">"Update homepage welcome text"</span></code></pre>
+        </div>
+      </div>
+
+      <div class="codeblock-label">Push your branch &amp; open the PR</div>
+<pre><code><span class="c-cmd">git push</span> -u origin fix/update-homepage-text
+
+<span class="c-cmd">gh pr create</span> --repo hd-admin/hackerdojo.org \
+  --title <span class="c-str">"Update homepage welcome text"</span> \
+  --body <span class="c-str">"Improves the welcome message for new visitors."</span></code></pre>
+
+      <div class="codeblock-label">After your PR is merged — stay in sync</div>
+<pre><code><span class="c-cmd">git pull</span> upstream main   <span class="c-comment"># latest onto your machine</span>
+<span class="c-cmd">git push</span> origin main     <span class="c-comment"># update your fork on github.com</span></code></pre>
+
+      <div class="callout tip">
+        <span class="ico">💡</span>
+        <div>Branch names like <code>fix/…</code>, <code>feat/…</code>, or <code>docs/…</code> signal intent at a glance and keep your <code>main</code> branch clean. Always clone <em>your</em> fork — cloning upstream gives you no push access.</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FINALE -->
+  <section class="finale">
+    <h2>You're live. 🚀</h2>
+    <div class="pills">
+      <span class="pill"><strong>Manual</strong> — 6 steps, ~5 min, zero cost</span>
+      <span class="pill"><strong>Automated</strong> — one command, ~30s</span>
+      <span class="pill"><strong>Contribute</strong> — fork, branch, PR</span>
+    </div>
+    <div class="cta-row" style="justify-content:center;margin-top:2.5rem;">
+      <a class="btn btn-primary" href="https://raw.githubusercontent.com/louisroehrs/github-pages-training/refs/heads/main/deploy-github-pages.md">Download the Claude Skill</a>
+      <a class="btn btn-ghost" href="https://docs.google.com/presentation/d/1FCLiTZNt-pBCXihv1uLO_rc0oG43FXrI1fJiKfINsGE/edit?usp=sharing">Open the Slides</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>Louis Roehrs · TeleTrex · Mountain View, CA · <a href="https://teletrex.com">teletrex.com</a></p>
+    <p style="margin-top:0.5rem;">Next session: <em>How to chat with your site.</em></p>
+  </footer>
+
+</body>
+</html>
